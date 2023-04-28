@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import config from '../config';
 import passport from 'passport';
 import InstagramStrategy from 'passport-instagram';
+import FacebookStrategy from 'passport-facebook'
+
 
 const app = express()
 
@@ -79,8 +81,30 @@ app.get('/profile', isAuthenticated, function(req, res) {
     res.redirect('/login');
   }
 
+// ---------------------   PASSPORT FACEBOOK --------------------------------------------------------------------
 
 
 
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "http://localhost:3002/auth/facebook/callback"
+},
+function(accessToken, refreshToken, profile, cb) {
+  User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
+
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
+ 
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
 
 export default app
