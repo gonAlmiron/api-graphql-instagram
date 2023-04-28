@@ -1,6 +1,7 @@
 import {GraphQLClient} from 'graphql-request';
 import config from '../config';
 import axios from 'axios'
+import request from 'request'
 
 
 const client = new GraphQLClient('https://graph.facebook.com/v12.0/', {
@@ -53,7 +54,7 @@ export const getDataUsuario = async (req, res) => {
   const accessToken = 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
 
   // Define la URL de la API de Instagram
-  const url = 'https://graph.instagram.com/me';
+  const url = 'https://developers.facebook.com/apps/me/';
   
   // Define los parámetros de la solicitud
   const params = {
@@ -62,15 +63,53 @@ export const getDataUsuario = async (req, res) => {
   };
 
     // Realiza la solicitud HTTP a la API de Instagram
-    axios.get(url, { params })
+    await axios.get(url, { params })
       .then(response => {
         // Aquí se manejan los datos de respuesta de la API de Instagram
         res.send(response.data);
       })
       .catch(error => {
         // Aquí se manejan los errores de la solicitud
-        console.log(error);
-        res.send(error)
+        res.send(error.message)
+        res.send(error.stack)
       });
 
+}
+
+
+export const getGraph = async (req, res) => {
+
+
+    try {
+
+const options = {
+  method: 'GET',
+
+  url: 'https://developers.facebook.com/apps/560448932859727/dashboard/',
+  qs: {
+    fields: 'business_discovery.username(quedeporte)',
+    access_token: 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
+  },
+  headers: {
+    'User-Agent': 'request'
+  }
+};
+
+
+
+request(options, function (error, response, body) {
+  
+  if (error) throw new Error(error);
+
+      const data = JSON.stringify(body);
+
+
+      res.send(data);
+
+});
+
+    } catch(err) {
+      res.send(err.message)
+      res.send(err.stack)
+    }
 }
