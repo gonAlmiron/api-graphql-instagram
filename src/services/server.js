@@ -46,14 +46,15 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new InstagramStrategy({
-    clientID: 'TU_CLIENT_ID_DE_INSTAGRAM',
-    clientSecret: 'TU_CLIENT_SECRET_DE_INSTAGRAM',
+    clientID: '560448932859727',
+    clientSecret: '1901037cc82055d218510e693c71660b',
     callbackURL: 'http://localhost:3000/auth/instagram/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     return done(null, profile);
   }
 ));
+
 // Iniciar sesión con Instagram
 app.get('/auth/instagram', passport.authenticate('instagram'));
 
@@ -63,9 +64,11 @@ app.get('/auth/instagram/callback',
     res.redirect('/');
   });
 // Protege las rutas que requieren autenticación
-  app.get('/profile', isAuthenticated, function(req, res) {
+
+app.get('/profile', isAuthenticated, function(req, res) {
     res.render('profile', { user: req.user });
   });
+
 // Middleware para verificar si el usuario está autenticado
   function isAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
