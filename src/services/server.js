@@ -44,12 +44,13 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
-
+const accessToken = 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
 passport.use(new InstagramStrategy({
-    clientID: '560448932859727',
-    clientSecret: '1901037cc82055d218510e693c71660b',
-    callbackURL: 'http://localhost:3000/auth/instagram/callback'
+    clientID: '242048968368293',
+    clientSecret: 'e8e8658c62a2dd2065f2ffa3d00465bc',
+    callbackURL: 'http://localhost:8080/auth/instagram/callback'
   },
+  
   function(accessToken, refreshToken, profile, done) {
     return done(null, profile);
   }
@@ -59,10 +60,11 @@ passport.use(new InstagramStrategy({
 app.get('/auth/instagram', passport.authenticate('instagram'));
 
 app.get('/auth/instagram/callback',
-  passport.authenticate('instagram', { failureRedirect: '/login' }),
+  passport.authenticate('instagram', { failureRedirect: '/' }),
   function(req, res) {
     res.redirect('/');
   });
+
 // Protege las rutas que requieren autenticación
 
 app.get('/profile', isAuthenticated, function(req, res) {
@@ -76,5 +78,9 @@ app.get('/profile', isAuthenticated, function(req, res) {
     }
     res.redirect('/login');
   }
+
+
+
+
 
 export default app
