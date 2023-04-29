@@ -6,8 +6,7 @@ import cookieParser from 'cookie-parser';
 import config from '../config';
 import passport from 'passport';
 import InstagramStrategy from 'passport-instagram';
-import FacebookStrategy from 'passport-facebook'
-
+import FacebookStrategy from 'passport-facebook';
 
 const app = express()
 
@@ -31,12 +30,17 @@ const StoreOptions = {
   },
 };
 
-
 app.use(session(StoreOptions));
 const mySecret = 'mySecret';
 app.use(cookieParser(mySecret));
 app.use('/api', MainRouter)
 
+
+//Indicamos que vamos a usar passport en todas nuestras rutas
+app.use(passport.initialize());
+
+//Permitimos que passport pueda manipular las sessiones de nuestra app
+app.use(passport.session());
 
 
 passport.serializeUser(function(user, done) {
@@ -46,7 +50,8 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
-const accessToken = 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
+
+const accessToken = 'EAADSzpbdiTABADaSWymRjBlrQg4DosFxa7hKYlBFZAgC5fyI5H9GYfhBz8i9aj1FVT4p5nF57VCoc8wtVlov5OhB2gLn6xkaZC2xlTLS4azMW8JZCZAtLVbFtv5NtxT28ILNaOIibRrAkZAKjtZByiV9grdgZAIoj9BMIQppa02H1S8gpy3qEZCpQvsa2r527kbA4RgQ0ckqrwZDZD'
 passport.use(new InstagramStrategy({
     clientID: '242048968368293',
     clientSecret: 'e8e8658c62a2dd2065f2ffa3d00465bc',
@@ -86,10 +91,11 @@ app.get('/profile', isAuthenticated, function(req, res) {
 
 
 passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_APP_ID,
-  clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3002/auth/facebook/callback"
+  clientID: '231784736196912',
+  clientSecret: '1e5e97c03d88f4826283eb2fd7e501cb',
+  callbackURL: "http://localhost:8080/auth/facebook/callback"
 },
+
 function(accessToken, refreshToken, profile, cb) {
   User.findOrCreate({ facebookId: profile.id }, function (err, user) {
     return cb(err, user);
@@ -107,4 +113,9 @@ app.get('/auth/facebook/callback',
     res.redirect('/');
   });
 
-export default app
+  app.get('/profile', isAuthenticated, function(req, res) {
+    res.render('profile', { user: req.user });
+  });
+
+
+  export default app;
