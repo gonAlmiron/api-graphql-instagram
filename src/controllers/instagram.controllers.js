@@ -10,7 +10,6 @@ const client = new GraphQLClient('https://graph.facebook.com/v12.0/', {
   },
 });
 
-
 export const getFollowers = async () => {
     try {
 
@@ -27,8 +26,8 @@ export const getFollowers = async () => {
       }
     `;
     
-    const data = await client.request(query);
-    console.log(data);
+      const data = await client.request(query);
+      console.log(data);
     } catch (err) {
         console.log(err.message)
         console.log(err.stack)
