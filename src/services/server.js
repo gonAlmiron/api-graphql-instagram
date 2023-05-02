@@ -91,8 +91,8 @@ app.get('/auth/instagram/callback',
   });
 
 
-app.get('/profile', isAuthenticated, function(req, res) {
-    res.render('profile', { user: req.user });
+  app.get('/profile', isAuthenticated, function(req, res) {
+    res.json ({ user: req.user });
   });
 
 
@@ -131,7 +131,7 @@ app.get('/auth/facebook/callback',
   });
 
   app.get('/profile', isAuthenticated, function(req, res) {
-    res.render('profile', { user: req.user });
+    res.json({ user: req.user });
   });
 
 

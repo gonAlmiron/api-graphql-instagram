@@ -1,7 +1,9 @@
 import {GraphQLClient} from 'graphql-request';
 import config from '../config';
 import axios from 'axios'
+import FormData from 'form-data'
 import request from 'request'
+import {exec} from 'child_process'
 
 
 const client = new GraphQLClient('https://graph.facebook.com/v12.0/', {
@@ -123,7 +125,7 @@ export const getGraph = async (req, res) => {
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
           const data = JSON.stringify(body);
-          res.send(data);
+          console.log(data);
 
     });
 
@@ -133,3 +135,66 @@ export const getGraph = async (req, res) => {
     }
 }
 
+export const curlGet = async (req, res) => {
+  try {
+
+    exec('curl https://www.google.com', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error al ejecutar el comando: ${error}`);
+        return;
+      }
+    
+      console.log(`Resultado: ${stdout}`);
+      res.send(`Resultado: ${stdout}`)
+    });
+    
+
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
+// PETICION DE ACCESS CODE DE FACEBOOK
+
+export const getCodeFacebook = async (req, res) => {
+
+  try {
+    const form = new FormData();
+    form.append('client_id', '180895391557997 ');
+    form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
+    form.append('grant_type', 'authorization_code');
+    form.append('redirect_uri', 'https://quedeporte.com.ar/auth/');
+    form.append('code', '{code}');
+    
+    const response = await axios.post(
+      'https://api.instagram.com/oauth/access_token',
+      form,
+      {
+        headers: {
+          ...form.getHeaders()
+        }
+      }
+    );
+
+    res.send(response)
+
+  } catch(err) {
+    console.log(err.message)
+    res.send(err)
+  }
+}
+
+// RECIBIR INFO: USER, EMAIL Y CUMPLEAÑOS DE FB. CON UN TOKEN DE ACCESO YA GENERADO. FUNCIONANDO
+
+export const getInfoFacebook = async (req, res) => {
+
+  try {
+    const response = await axios.get('https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail%2Cbirthday&access_token=EAADSzpbdiTABAPIkmfIW6kKZARcsS4ikBLi9oMCBjxOCJD5bZAPTvUXZCPZBjWcm1vhAM1TgLznWgv0HZCCKumN2ne2gDyVpurZCgZAqBlYWALf6OnlSgKMO6o9t0ZBi6GEv8ePZABFLPmDq7X7pMBcZBZCZAEqVJdyMFe7r38SKcNP6n8SZC4OiXrhBV3nMQS8KothsZBJZAMh0AZClB1evaN3xZAI6sT9ZB7T4frqh2fwWo80Mcp7ZCLN4kVJcl4q');
+    res.send(response.data)
+
+  } catch(err) {
+    res.send(err)
+  }
+
+
+}
