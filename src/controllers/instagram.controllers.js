@@ -1,9 +1,9 @@
 import {GraphQLClient} from 'graphql-request';
-import config from '../config';
-import axios from 'axios'
-import FormData from 'form-data'
-import request from 'request'
-import {exec} from 'child_process'
+import axios from 'axios';
+import FormData from 'form-data';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 
 const client = new GraphQLClient('https://graph.facebook.com/v12.0/', {
@@ -39,7 +39,7 @@ export const getFollowers = async () => {
 export const getFollowersREST = async (req, res) => {
 
   const userId = req.params.userId;
-  const accessToken = ''; // Reemplaza con tu propio token de acceso
+  const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
   const url = `https://graph.instagram.com/${userId}/followers?access_token=${accessToken}`;
 
   try {
@@ -68,7 +68,7 @@ export const getDataREST = async (req, res) => {
 
 
 export const getDataUsuario = async (req, res) => {
-    const accessToken = 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
     const url = 'https://developers.facebook.com/apps/me/';
     
     const params = {
@@ -87,72 +87,6 @@ export const getDataUsuario = async (req, res) => {
 
 }
 
-export const getIDUsuario = async (req, res) => {
-
-  const accessToken = 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'; // Reemplaza con tu propio token de acceso
-  const username = 'quedeporte'; // Reemplaza con el nombre de usuario del usuario de Instagram del que deseas obtener el ID
-  const url = `https://graph.instagram.com/${username}?fields=id&access_token=${accessToken}`;
-  try {
-    axios.get(url)
-  .then(response => {
-    const userId = response.data.id;
-    console.log(`El ID del usuario ${username} es ${userId}`);
-  })
-  .catch(error => {
-    console.error(error.message);
-  });
-  } catch (err) {
-    res.send(err.message)
-  }
-}
-
-
-export const getGraph = async (req, res) => {
-  try {
-    const options = {
-      method: 'GET',
-
-      url: 'https://developers.facebook.com/apps/560448932859727/dashboard/',
-      qs: {
-        fields: 'business_discovery.username(quedeporte)',
-        access_token: 'EAAQgnwlIu5kBAGZAYXR9xh0uoZCArg02A6FumbS2IDcLPtxVwvw2kWSj5Uy8VogbeicEd8KPbbdeiMkYJC4TZC5hvh1e5dd0eNZCwwLS8IydZCLQ8LySYOLpHkCPZCiucTRm7MeKq30YcTOZCqq3izBMrNhkZBKZCMapW8kH8m6j6nFvIngpPCyWNeIpfuHPgyu3TZCdPkobfPONcUaYUmSw1ZAcOcdUgbVTXmOWDQ53HV7sazFuC4yAurP'
-      },
-      headers: {
-        'User-Agent': 'request'
-      }
-    };
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-          const data = JSON.stringify(body);
-          console.log(data);
-
-    });
-
-    } catch(err) {
-      res.send(err.message)
-      res.send(err.stack)
-    }
-}
-
-export const curlGet = async (req, res) => {
-  try {
-
-    exec('curl https://www.google.com', (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error al ejecutar el comando: ${error}`);
-        return;
-      }
-    
-      console.log(`Resultado: ${stdout}`);
-      res.send(`Resultado: ${stdout}`)
-    });
-    
-
-  } catch (err) {
-    console.log(err.message)
-  }
-}
 
 // PETICION DE ACCESS CODE DE FACEBOOK
 
@@ -160,11 +94,11 @@ export const getCodeFacebook = async (req, res) => {
 
   try {
     const form = new FormData();
-    form.append('client_id', '180895391557997 ');
+    form.append('client_id', '180895391557997');
     form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
     form.append('grant_type', 'authorization_code');
-    form.append('redirect_uri', 'https://quedeporte.com.ar/auth/');
-    form.append('code', '{code}');
+    form.append('redirect_uri', 'https://localhost:443/api/auth/instagram');
+    form.append('code', 'AQD5lNF-Gdf4dEB33vlFRahWHILPChQRQNjH3gKhmQWkcZ_a8UrwAWN6PBIyEjNuQcWynogcLdwROzFUE-h2Fne2MlTUqHLPAwCoovMuUlG-nUToEhbGDxYKnRUvuMt9RP85GLBZm8Fd5ZXqUGEXqirb7jf-vMVlmKWlt-jc50kufmwmwn_z6_1J8OAmmmyamEdeG_onaZuW2JCRhTXt1C7wtldRCu7KRY4nU5a3KCXJSA');
     
     const response = await axios.post(
       'https://api.instagram.com/oauth/access_token',
@@ -176,7 +110,7 @@ export const getCodeFacebook = async (req, res) => {
       }
     );
 
-    res.send(response)
+    res.send(response.data)
 
   } catch(err) {
     console.log(err.message)
@@ -189,12 +123,61 @@ export const getCodeFacebook = async (req, res) => {
 export const getInfoFacebook = async (req, res) => {
 
   try {
-    const response = await axios.get('https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail%2Cbirthday&access_token=EAADSzpbdiTABAPIkmfIW6kKZARcsS4ikBLi9oMCBjxOCJD5bZAPTvUXZCPZBjWcm1vhAM1TgLznWgv0HZCCKumN2ne2gDyVpurZCgZAqBlYWALf6OnlSgKMO6o9t0ZBi6GEv8ePZABFLPmDq7X7pMBcZBZCZAEqVJdyMFe7r38SKcNP6n8SZC4OiXrhBV3nMQS8KothsZBJZAMh0AZClB1evaN3xZAI6sT9ZB7T4frqh2fwWo80Mcp7ZCLN4kVJcl4q');
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
+    const response = await axios.get(`https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail%2Cbirthday&access_token=${accessToken}`);
     res.send(response.data)
 
   } catch(err) {
     res.send(err)
   }
-
-
 }
+
+export const getTokenFacebook = async (req, res) => {
+
+  try {
+    
+    // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
+    const form = new FormData();
+    form.append('client_id', '180895391557997');
+    form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
+    form.append('grant_type', 'authorization_code');
+    form.append('redirect_uri', 'https://localhost:443/api/auth/instagram');
+    form.append('code', 'AQC0sAVS6thiRS3UaoCBbYdxyx-6Lr4EwOvd1YEE1HXlyZy3FaQqeg6t-Lv-c0iXK1Hqi9rdXzS2w4x7RFCH9BhiqdrR6bjWPN6oD8jnyGWMUiDb1ltyM8VIrqrngZT0cxrEhnDx4ma75ssVQcEvwSx-TRblsMkdFHQMqyWr7VVrKsq1biK2fBitALKsWKY9ODx84k-7_QwFDZZprv_Aeky2ovCexuIgwZZdk_GPmmRRsg');
+
+
+    // ACA CON LOS DATOS DE NUESTRA CUENTA Y EL CODE QUE LE DAN AL USUARIO AL INGRESAR CON INSTAGRAM, HACEMOS EL POST QUE NOS TRAE EL ACCESS_TOKEN
+    const response = await axios.post(
+      'https://api.instagram.com/oauth/access_token',
+      form,
+      {
+        headers: {
+          ...form.getHeaders()
+        }
+      }
+    );
+    
+    const token = response.data.access_token
+    
+    
+
+
+    await res.send(`El access token es: ${token}`)
+
+    // // RECIBIMOS EL TOKEN EN ESTA VARIABLE
+    // const token = response.data.access_token
+
+
+    // // PEDIMOS DATOS DEL USUARIO
+    // const infoUser = await axios.get(`https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail%2Cbirthday&access_token=${token}`);
+    // res.send(response.data)
+
+    
+
+    
+
+  } catch(err) {
+    res.send(err)
+  }
+}
+
+// https://api.instagram.com/oauth/access_token?client_id=180895391557997&client_secret=b45df1e98fe84fceb1924f7c451a584e&grant_type=authorization_code&redirect_uri=https://localhost:443/api/auth/instagram&code=AQAq16GmxBa9T7_yaunDOqaHX-3bTA97gNZQs0WBeAC6rDPUngfHN8pAIlRyMI06L1hp4MCbkLRqFLuQ-di8XHl5anP_O2lUm8o3YuWMoX-ee4Pm3QveRSmYLkrFRYG-UhVsehPZ2O8TtkwJfSOIP9FCMby3I74Vq3m-JuT0jkOWi855btIvyyUURj1y22qDvX2TYrOVxkZdpEb_ceWSViIq3SeyBpSWnnchl-ryh6Lbeg

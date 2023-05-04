@@ -11,14 +11,16 @@ import { UserModel } from '../models/user';
 import https from 'https';
 import fs from 'fs';
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 
 dotenv.config();
 
 const app = express()
 
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors())
 
 // Cert. SSL
 const httpsServerOptions = {
@@ -55,8 +57,6 @@ app.use('/api', MainRouter)
 
 // ---------- Inicialización Passport ------------------- 
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -66,8 +66,12 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // ---------------------   PASSPORT INSTAGRAM ------------------------ API GRAPH VISUALIZACION BASICA DE INSTAGRAM -------------------------------------------- 
+
 
 const accessToken = 'EAADSzpbdiTABALFhaoAZC12W8sn2085XubkTzRVC5qxHxwcqAuPcoK3Oa17ZAYHajVIdBThZALEjkgYKQEPSQlpQ0jd0ELz28r4S9DrAQdsZCfK8cXpiPZClGtRLjxIPHYSh1uC1AgsQ1ZB3hfGf8dgCOV6zoR7iPZCSNMtyREHllQ622lpVV2n8mlGYI6TbaaPBws765VZAcwZDZD'
 passport.use(new InstagramStrategy({
@@ -77,6 +81,13 @@ passport.use(new InstagramStrategy({
   },
   
   function(accessToken, refreshToken, profile, done) {
+
+    const data = {
+      token: accessToken,
+      profileIg: profile
+    }
+
+    UserModel.create(data)
     return done(null, profile);
   }
 ));
@@ -85,9 +96,9 @@ passport.use(new InstagramStrategy({
 app.get('/auth/instagram', passport.authenticate('instagram'));
 
 app.get('/auth/instagram/callback',
-  passport.authenticate('instagram', { failureRedirect: '/api' }),
+  passport.authenticate('instagram', { failureRedirect: '/' }),
   function(req, res) {
-    res.redirect('/api');
+    res.redirect('/');
   });
 
 
@@ -124,7 +135,6 @@ app.get('/auth/facebook/callback',
   passport.authenticate('facebook', 
     { 
     failureRedirect: '/',
-    scope: ['email'] 
     }),
   (req, res) => {
     res.redirect('/');

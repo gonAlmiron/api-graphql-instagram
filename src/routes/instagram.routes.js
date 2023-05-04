@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { getDataREST, getDataUsuario, getFollowers, getGraph, getIDUsuario, curlGet, getCodeFacebook, getInfoFacebook } from '../controllers/instagram.controllers';
+import { getDataREST, getDataUsuario, getFollowers, getTokenFacebook, getInfoFacebook } from '../controllers/instagram.controllers';
 
 const router = Router();
 
@@ -9,13 +9,7 @@ router.get('/rest', getDataREST)
 
 router.get('/datos', getDataUsuario)
 
-router.get('/graph', getGraph)
-
-router.get('/getid', getIDUsuario)
-
-router.get('/curl', curlGet)
-
-router.post('/code', getCodeFacebook)
+router.post('/token', getTokenFacebook)
 
 router.get('/info', getInfoFacebook)
 

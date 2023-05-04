@@ -1,7 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 const UserSchema = new Schema({
-  facebookId: { type: String, required: true, unique: true },
+  token: { type: String, required: true, unique: true },
+  profileIg: {type: String, unique: true}
 },
 {timestamps: true}
 )
