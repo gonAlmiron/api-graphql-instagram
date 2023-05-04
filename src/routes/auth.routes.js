@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/code', captureCode)
 
+router.get('/token', getToken)
 router.post('/token', getToken);
 
 router.get('/data', getDataIg);

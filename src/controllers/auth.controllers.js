@@ -16,17 +16,20 @@ export const captureCode = async (req, res, next) => {
     }
 }
 
-export const getToken = async (req, res) => {
+export const getToken = async (req, res, next) => {
     try {
 
-    const code = 'AQBMRxdDLfAVW9T7-coH-hQ5AQsl7rMAKFpOwsO_k95b7C89bboh-L2ftXjG2XutH27RZTlXqt71KXrl6k2d9huZdjvWKG564xBpAeF07mRu0NQ_IfBeyl4c6aiZAHdauCNdwDRld7g3UbShb00Ou0Oc3yjNTN3HLbLBncYTyamGpbhgYDC81vuNMM6yPl8j_ReuJHfidqkqjU91DilTjEvVuWiwYh_GpxZlhEEF_Ga2Tw'
+    // PRIMERO PEDIMOS EL CODIGO QUE NOS MANDA INSTAGRAM, CUANDO EL USUARIO DA PERMISO DE INSTAGRAM
+    const code = req.query.code
+    
          // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
     const form = new FormData();
     form.append('client_id', '180895391557997');
     form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
     form.append('grant_type', 'authorization_code');
-    form.append('redirect_uri', 'https://localhost:443/api/auth/code');
+    form.append('redirect_uri', 'https://localhost:443/api/auth/token');
     form.append('code', code);
+    console.log("CODIGO RECIBIDO CORRECTAMENTE: ", code)
 
 
     // ACA CON LOS DATOS DE NUESTRA CUENTA Y EL CODE QUE LE DAN AL USUARIO AL INGRESAR CON INSTAGRAM, HACEMOS EL POST QUE NOS TRAE EL ACCESS_TOKEN
@@ -42,6 +45,7 @@ export const getToken = async (req, res) => {
     const token = response.data.access_token
 
     res.send(`El access Token es: ${token}`)
+    next()
     
 } catch(err) {
     console.log(err)
