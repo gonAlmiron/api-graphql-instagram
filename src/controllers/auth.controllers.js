@@ -4,12 +4,13 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 
-export const captureCode = async (req, res) => {
+export const captureCode = async (req, res, next) => {
     try {
         // CAPTURANDO EL CODIGO DE AUTORIZACION que le dan al usuario al permitir ingresar con instagram
         const code = req.query.code
-        console.log(code)
+        req.code = code
         await res.send(`El codigo de autorizacion del usuario es:      ${code} \n ------ Hay que cambiarlo por un ACCESS TOKEN para pedir datos. ` )
+        next()
     } catch(err) {
         res.send(err)
     }
@@ -18,7 +19,7 @@ export const captureCode = async (req, res) => {
 export const getToken = async (req, res) => {
     try {
 
-    const code = 'AQBs3J2k7ocDs2adZBlkU31VK8aWDQpBPm6xrDCDBpnTmvXg1TJYEa0m8S8wUV7_e6kwPF8Ay-_XNG5-xDLHd5_BkgBz-cn-aJTI7L6mzW15Bsf4KiRnHzrSmo-zt6U7Dx_nSHPsXnsRLslPR9j_4qM_MbamklDAktuUYpWdBuuHZ_0TNvIH0Sqo-1iw9LDS-ImPtGgslhHzUt51lgaWnXFVj94zxVt7tpg_VM5aWdjWuw'
+    const code = 'AQBMRxdDLfAVW9T7-coH-hQ5AQsl7rMAKFpOwsO_k95b7C89bboh-L2ftXjG2XutH27RZTlXqt71KXrl6k2d9huZdjvWKG564xBpAeF07mRu0NQ_IfBeyl4c6aiZAHdauCNdwDRld7g3UbShb00Ou0Oc3yjNTN3HLbLBncYTyamGpbhgYDC81vuNMM6yPl8j_ReuJHfidqkqjU91DilTjEvVuWiwYh_GpxZlhEEF_Ga2Tw'
          // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
     const form = new FormData();
     form.append('client_id', '180895391557997');
@@ -66,37 +67,31 @@ export const getToken = async (req, res) => {
 export const getDataIg = async (req, res) => {
 
     try {
-
-        const {code} = req.query
-        console.log(`El codigo de autorizacion del usuario es:      ${code} \n ------ Hay que cambiarlo por un ACCESS TOKEN para pedir datos` )
-    
+        const code = 'AQBv6xjIhX5bVonjU0O9na5FNDHHEN3IrCKO1tl8EzDZsdSNZs3lOQY3N6pOh6Hm4lETtjZv2G8XYsZ8N0dyq1MIvhqLyL0gFq_0uTirpzY8k0eNDEtqzidUJUOiSV0ae-NeFSlXyO-FoeH3FeshkG34H6B23VjiBb7cwGCzwFIkNsRhjtgJeUr2RJxjrpF5pH6uAD4BXSgX4c6rjmZs6DF3g2f8MTijijyXR_jK6HlIBA'
+         // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
         const form = new FormData();
         form.append('client_id', '180895391557997');
         form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
         form.append('grant_type', 'authorization_code');
         form.append('redirect_uri', 'https://localhost:443/api/auth/code');
         form.append('code', code);
-    
-    
+
+
         // ACA CON LOS DATOS DE NUESTRA CUENTA Y EL CODE QUE LE DAN AL USUARIO AL INGRESAR CON INSTAGRAM, HACEMOS EL POST QUE NOS TRAE EL ACCESS_TOKEN
         const response = await axios.post(
-          'https://api.instagram.com/oauth/access_token',
-          form,
-          {
+        'https://api.instagram.com/oauth/access_token',
+        form,
+        {
             headers: {
-              ...form.getHeaders()
+            ...form.getHeaders()
             }
-          }
+        }
         )
         const token = response.data.access_token
-        console.log(token)
-    
+            
         const userDataResponse = await axios.get(`https://api.instagram.com/v1/users/self/?access_token=${token}`);
 
-    // Obtener los datos del usuario de la respuesta
     const { data: userData } = userDataResponse;
-
-    // Retornar los datos del usuario en la respuesta
     res.send(userData);
 
     } catch(err) {

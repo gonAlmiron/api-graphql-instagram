@@ -14,3 +14,4 @@
 // router.get('/info', getInfoFacebook)
 
 // export default router
+"use strict";

@@ -5,7 +5,6 @@
 
 // dotenv.config()
 
-
 // const client = new GraphQLClient('https://graph.facebook.com/v12.0/', {
 //   headers: {
 //     Authorization: `Bearer ${process.env.ACCESS_TOKEN}|${process.env.APP_SECRET}}`,
@@ -27,7 +26,7 @@
 //         }
 //       }
 //     `;
-    
+
 //       const data = await client.request(query);
 //       console.log(data);
 //     } catch (err) {
@@ -53,7 +52,7 @@
 // };
 
 // export const getDataREST = async (req, res) => {
-  
+
 //   const { userId } = req.params;
 //   const { INSTAGRAM_ACCESS_TOKEN } = process.env;
 
@@ -69,12 +68,12 @@
 // export const getDataUsuario = async (req, res) => {
 //     const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN
 //     const url = 'https://developers.facebook.com/apps/me/';
-    
+
 //     const params = {
 //     fields: 'id,username',
 //     access_token: `${accessToken}`
 //   };
-  
+
 //   await axios.get(url, { params })
 //       .then(response => {   
 //         res.send(response.data);
@@ -96,7 +95,7 @@
 //     form.append('grant_type', 'authorization_code');
 //     form.append('redirect_uri', 'https://localhost:443/api/auth/instagram');
 //     form.append('code', 'AQD5lNF-Gdf4dEB33vlFRahWHILPChQRQNjH3gKhmQWkcZ_a8UrwAWN6PBIyEjNuQcWynogcLdwROzFUE-h2Fne2MlTUqHLPAwCoovMuUlG-nUToEhbGDxYKnRUvuMt9RP85GLBZm8Fd5ZXqUGEXqirb7jf-vMVlmKWlt-jc50kufmwmwn_z6_1J8OAmmmyamEdeG_onaZuW2JCRhTXt1C7wtldRCu7KRY4nU5a3KCXJSA');
-    
+
 //     const response = await axios.post(
 //       'https://api.instagram.com/oauth/access_token',
 //       form,
@@ -132,7 +131,7 @@
 // export const getTokenFacebook = async (req, res) => {
 
 //   try {
-    
+
 //     // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
 //     const form = new FormData();
 //     form.append('client_id', '180895391557997');
@@ -140,7 +139,6 @@
 //     form.append('grant_type', 'authorization_code');
 //     form.append('redirect_uri', 'https://localhost:443/api/auth/instagram');
 //     form.append('code', 'AQC0sAVS6thiRS3UaoCBbYdxyx-6Lr4EwOvd1YEE1HXlyZy3FaQqeg6t-Lv-c0iXK1Hqi9rdXzS2w4x7RFCH9BhiqdrR6bjWPN6oD8jnyGWMUiDb1ltyM8VIrqrngZT0cxrEhnDx4ma75ssVQcEvwSx-TRblsMkdFHQMqyWr7VVrKsq1biK2fBitALKsWKY9ODx84k-7_QwFDZZprv_Aeky2ovCexuIgwZZdk_GPmmRRsg');
-
 
 //     // ACA CON LOS DATOS DE NUESTRA CUENTA Y EL CODE QUE LE DAN AL USUARIO AL INGRESAR CON INSTAGRAM, HACEMOS EL POST QUE NOS TRAE EL ACCESS_TOKEN
 //     const response = await axios.post(
@@ -152,13 +150,12 @@
 //         }
 //       }
 //     );
-    
+
 //     const token = response.data.access_token
 //     await res.send(`El access token es: ${token}`)
 
 //     // // RECIBIMOS EL TOKEN EN ESTA VARIABLE
 //     // const token = response.data.access_token
-
 
 //     // // PEDIMOS DATOS DEL USUARIO
 //     // const infoUser = await axios.get(`https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail%2Cbirthday&access_token=${token}`);
@@ -170,3 +167,4 @@
 // }
 
 // // https://api.instagram.com/oauth/access_token?client_id=180895391557997&client_secret=b45df1e98fe84fceb1924f7c451a584e&grant_type=authorization_code&redirect_uri=https://localhost:443/api/auth/instagram&code=AQAq16GmxBa9T7_yaunDOqaHX-3bTA97gNZQs0WBeAC6rDPUngfHN8pAIlRyMI06L1hp4MCbkLRqFLuQ-di8XHl5anP_O2lUm8o3YuWMoX-ee4Pm3QveRSmYLkrFRYG-UhVsehPZ2O8TtkwJfSOIP9FCMby3I74Vq3m-JuT0jkOWi855btIvyyUURj1y22qDvX2TYrOVxkZdpEb_ceWSViIq3SeyBpSWnnchl-ryh6Lbeg
+"use strict";

@@ -1,10 +1,10 @@
 import {Router} from 'express';
-import instagramRouter from './instagram.routes'
+// import instagramRouter from './instagram.routes'
 import authRouter from './auth.routes'
 
 const router = Router();
 
-router.use('/ig', instagramRouter)
+// router.use('/ig', instagramRouter)
 
 router.use('/auth', authRouter)
 
