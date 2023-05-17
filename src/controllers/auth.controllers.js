@@ -51,8 +51,6 @@ export const getToken = async (req, res, next) => {
     // Y una cookie en el cliente
     res.cookie('token', token)
 
-    res.redirect('/')
-
     res.send(`El access Token es: ${token}`)
 
     // const userData = await axios.get('https://graph.facebook.com/v16.0/me', {
