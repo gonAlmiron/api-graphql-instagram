@@ -44,6 +44,15 @@ export const getToken = async (req, res, next) => {
     )
     const token = response.data.access_token
 
+    // Guardamos el token de acceso del login de facebook en una sesion para poder pedir datos con eso
+    req.session.token = token;
+    req.session.user_id = response.data.id
+
+    // Y una cookie en el cliente
+    res.cookie('token', token)
+
+    res.redirect('/')
+
     res.send(`El access Token es: ${token}`)
 
     // const userData = await axios.get('https://graph.facebook.com/v16.0/me', {
@@ -100,11 +109,11 @@ export const getDataIg = async (req, res) => {
         // }
         // )
         // const token = response.data.access_token
-            
+        const accessToken = req.session.token
         const userDataResponse = await axios.get('https://graph.facebook.com/v16.0/me', {
             params: {
                 'fields': 'name',
-                'access_token': 'EAAQgnwlIu5kBAIwrpZBsSlOyvSjMtXpZCFMaq83FdIrS2kIqOriT5VOKtdXfm1qqpVkd4Rp2hCADrqeajZAkLvIOHUtVsZAumkzpaanzS7L85KfZCkNI8ZAMRA7rXxzXuZCGc5DPO2B343ZAMTegLNAPRIKdVrzPhiZBpdvP12osudfOdEvHlq28D5R6ZBa9gZAQHpMnpuZBAY8ZC0Pb6CdZBJZCUwp'
+                'access_token': accessToken
             }
             });
 
