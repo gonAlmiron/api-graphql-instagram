@@ -22,7 +22,7 @@ export const getToken = async (req, res, next) => {
     // PRIMERO PEDIMOS EL CODIGO QUE NOS MANDA INSTAGRAM, CUANDO EL USUARIO DA PERMISO DE INSTAGRAM
     const code = req.query.code
 
-         // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
+    // PETICION A API GRAPH INSTAGRAM: ACCESS TOKEN 
     const form = new FormData();
     form.append('client_id', '180895391557997');
     form.append('client_secret', 'b45df1e98fe84fceb1924f7c451a584e');
@@ -31,7 +31,7 @@ export const getToken = async (req, res, next) => {
     form.append('code', code);
     console.log("CODIGO RECIBIDO CORRECTAMENTE: ", code)
 
-
+    
     // ACA CON LOS DATOS DE NUESTRA CUENTA Y EL CODE QUE LE DAN AL USUARIO AL INGRESAR CON INSTAGRAM, HACEMOS EL POST QUE NOS TRAE EL ACCESS_TOKEN
     const response = await axios.post(
       'https://api.instagram.com/oauth/access_token',
