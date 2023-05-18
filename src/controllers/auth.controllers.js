@@ -42,16 +42,30 @@ export const getToken = async (req, res, next) => {
         }
       }
     )
-    const token = response.data.access_token
+    let token = response.data.access_token
+    console.log("Token: " + token)
 
     // Guardamos el token de acceso del login de facebook en una sesion para poder pedir datos con eso
     req.session.token = token;
     req.session.user_id = response.data.id
 
+    // // SE CAMBIA EL TOKEN SHORT-LIVED POR EL LONG-LIVED TOKEN Y SE GUARDA EN LA BASE DE DATOS
+
+    const responseToken = await axios.get(`https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=b45df1e98fe84fceb1924f7c451a584e&access_token=${token}`)
+    const tokenLong = responseToken.data.access_token;
+    console.log("Token Long: " + tokenLong)
+    // Guardar en Mongo
+
+    // PEDIMOS DATOS CON EL TOKEN LONG A INSTAGRAM: SOBRE MEDIA -> MEDIA_TYPE, PERMALINK, MEDIA_URL
+    const datosIg = await axios.get(`https://graph.instagram.com/me/media?fields=media_type,permalink,media_url&access_token=${tokenLong}`);
+    const datos = JSON.stringify(datosIg.data);
+    const status = datosIg.status
+    console.log("Datos instagram:" + datos)
+    console.log("Status de la respuesta: " + status)
     // Y una cookie en el cliente
     res.cookie('token', token)
 
-    res.send(`El access Token es: ${token}`)
+    res.send(`Datos: ${datos}`)
 
     // const userData = await axios.get('https://graph.facebook.com/v16.0/me', {
     //     params: {
@@ -60,8 +74,6 @@ export const getToken = async (req, res, next) => {
     //     }
     //     });
     // res.send(userData)
-    next()
-    
 } catch(err) {
     console.log(err)
 }
