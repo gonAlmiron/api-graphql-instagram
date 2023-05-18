@@ -39,11 +39,9 @@ const ttlSeconds = 6000;
 const StoreOptions = {
   store: MongoStore.create({
     mongoUrl: config.MONGO_ATLAS_URI,
-    crypto: {
-      secret: 'squirrel',
-    },
+    collectionName: 'sessions'
   }),
-  secret: 'shhhhhh',
+  secret: 'secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
